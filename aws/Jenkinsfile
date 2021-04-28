@@ -1,5 +1,6 @@
 def access_key=""
 def secret_key=""
+def data = ""
 pipeline {
   agent any
 
@@ -19,12 +20,15 @@ pipeline {
 		}
 	}
 	dir('aws') {
-	writeFile file: "${BUILD_ID}_terraform.tfvars", text: "aws_access_key=${access_key} \n"
-	writeFile file: "${BUILD_ID}_terraform.tfvars", text: "aws_secret_key=${secret_key} \n"
-	writeFile file: "${BUILD_ID}_terraform.tfvars", text: "app_name=${app_name} \n"
-	writeFile file: "${BUILD_ID}_terraform.tfvars", text: "app_environment=${app_environment} \n"
-	writeFile file: "${BUILD_ID}_terraform.tfvars", text: "aws_region=${aws_region} \n"
-	writeFile file: "${BUILD_ID}_terraform.tfvars", text: "instance_type=${instance_type} \n"
+		script {
+			data = "aws_access_key=${access_key} \n"
+			data = data + "aws_secret_key=${secret_key} \n"
+			data = data + "app_name=${app_name} \n"
+			data = data + "app_environment=${app_environment} \n"
+			data = data + "aws_region=${aws_region} \n"
+			data = data + "instance_type=${instance_type} \n"
+		}
+	writeFile file: "${BUILD_ID}_terraform.tfvars", text: data
 	sh "cat ${BUILD_ID}_terraform.tfvars"
       	  }
       }
