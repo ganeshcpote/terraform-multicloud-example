@@ -24,12 +24,14 @@ pipeline {
     }
     stage('Terraform Init') {
       steps {
+	sh "cd aws/"
 	sh 'pwd'
         sh "terraform init"
       }
     }
     stage('Terraform Plan') {
       steps {
+	sh "cd aws/"
 	sh 'pwd'
         sh "terraform plan -out=tfplan -var-file=terraform.tfvars"
         sh "terraform show -no-color tfplan > tfplan.txt"
