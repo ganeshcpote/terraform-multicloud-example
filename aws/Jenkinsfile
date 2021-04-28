@@ -1,0 +1,29 @@
+pipeline {
+  agent any
+
+  parameters {
+        string(name: 'app_name', defaultValue: 'test1', description: 'Provide Application name to be deploy') 
+		choice(name: 'app_environment', choices: ['dev', 'qa', 'pre-prod', 'prod'], description: 'Specify environment' )
+		choice(name: 'aws_region', choices: ['us-east-1', 'us-east-2'], description: 'Specify aws region' )
+		choice(name: 'instance_type', choices: ['t2.micro', 't2.medium'], description: 'Specify instance type' )
+    }
+  stages {
+    stage('Terraform Init') {
+      steps {
+		sh "cd aws/"
+        sh "terraform init'"
+      }
+    }
+    stage('Terraform Plan') {
+      steps {
+        sh "terraform plan plan -out=tfplan -var-file=terraform.tfvars'"
+        sh "terraform show -no-color tfplan > tfplan.txt"
+      }
+    }
+  }
+  post {
+        always {
+            archiveArtifacts artifacts: 'tfplan.txt'
+        }
+    }
+}
