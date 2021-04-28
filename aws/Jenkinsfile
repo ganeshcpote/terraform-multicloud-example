@@ -10,8 +10,8 @@ pipeline {
   stages {
     stage('Terraform Init') {
       steps {
-		sh "cd aws/"
-        sh "terraform init'"
+	sh "cd aws/"
+        sh "terraform init"
       }
     }
     stage('Terraform Plan') {
