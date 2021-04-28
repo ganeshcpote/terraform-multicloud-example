@@ -41,7 +41,7 @@ pipeline {
   post {
         always {
             archiveArtifacts artifacts: 'tfplan.txt'
-	    deleteDir() /*clean up our workspace */
+            cleanWs()
         }
     }
 }
