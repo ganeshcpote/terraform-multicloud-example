@@ -13,7 +13,7 @@ pipeline {
 	sh "cd aws/"
 	withCredentials ([usernamePassword(credentialsId: 'aws_credentails', usernameVariable: 'aws_access_key', passwordVariable: 'aws_secret_key')]) {
 	   sh 'echo aws_access_key=${aws_access_key} >> terraform.tfvars'
-	   sh 'echo aws_secret_key=${aws_secret_key} >> terraform.tfvars
+	   sh 'echo aws_secret_key=${aws_secret_key} >> terraform.tfvars'
            sh 'echo app_name=${app_name} >> terraform.tfvars'
 	   sh 'echo app_environment=${app_environment} >> terraform.tfvars'
 	   sh 'echo aws_region=${aws_region} >> terraform.tfvars'
