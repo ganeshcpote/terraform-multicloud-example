@@ -11,11 +11,15 @@ pipeline {
    stage('Preparations') {
       steps {
 	sh "cd aws/"
-        sh 'echo app_name=${app_name} >> terraform.tfvars'
-	sh 'echo app_environment=${app_environment} >> terraform.tfvars'
-	sh 'echo aws_region=${aws_region} >> terraform.tfvars'
-	sh 'echo instance_type=${instance_type} >> terraform.tfvars'
-	sh 'cat terraform.tfvars'
+	withCredentials ([usernamePassword(credentialsId: 'aws_credentails', usernameVariable: 'aws_access_key', passwordVariable: 'aws_secret_key')]) {
+	   sh 'echo aws_access_key=${aws_access_key} >> terraform.tfvars'
+	   sh 'echo aws_secret_key=${aws_secret_key} >> terraform.tfvars
+           sh 'echo app_name=${app_name} >> terraform.tfvars'
+	   sh 'echo app_environment=${app_environment} >> terraform.tfvars'
+	   sh 'echo aws_region=${aws_region} >> terraform.tfvars'
+	   sh 'echo instance_type=${instance_type} >> terraform.tfvars'
+	   sh 'cat terraform.tfvars'
+	}
       }
     }
     stage('Terraform Init') {
