@@ -53,7 +53,7 @@ pipeline {
         always {
 		dir('aws') { 
             archiveArtifacts artifacts: "${BUILD_ID}_tfplan.txt"
-			cleam_ws()
+			cleanWs()
 		}
         }
     }
