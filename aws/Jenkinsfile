@@ -8,9 +8,18 @@ pipeline {
 		choice(name: 'instance_type', choices: ['t2.micro', 't2.medium'], description: 'Specify instance type' )
     }
   stages {
-    stage('Terraform Init') {
+   stage('Preparations') {
       steps {
 	sh "cd aws/"
+        sh 'echo app_name=${app_name} >> terraform.tfvars'
+	sh 'echo app_environment=${app_environment} >> terraform.tfvars'
+	sh 'echo aws_region=${aws_region} >> terraform.tfvars'
+	sh 'echo instance_type=${instance_type} >> terraform.tfvars'
+	sh 'cat terraform.tfvars'
+      }
+    }
+    stage('Terraform Init') {
+      steps {
         sh "terraform init"
       }
     }
