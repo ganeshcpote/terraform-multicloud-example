@@ -12,10 +12,10 @@ pipeline {
       steps {
 	script {
 		withCredentials ([usernamePassword(credentialsId: 'aws_credentails', usernameVariable: 'aws_access_key', passwordVariable: 'aws_secret_key')]) {
-	   def access_key = aws_access_key
-	   def secret_key = aws_secret_key
+		   def access_key = aws_access_key
+		   def secret_key = aws_secret_key
+		}
 	}
-	
 	dir('aws') {     
 	sh "echo aws_access_key=${access_key} \n >> ${BUILD_ID}_terraform.tfvars"
 	sh "echo aws_secret_key=${secret_key} \n >> ${BUILD_ID}_terraform.tfvars"
