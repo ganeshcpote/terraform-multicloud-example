@@ -10,35 +10,40 @@ pipeline {
   stages {
    stage('Preparations') {
       steps {
-	sh "cd ${WORKSPACE}/aws"      
-	withCredentials ([usernamePassword(credentialsId: 'aws_credentails', usernameVariable: 'aws_access_key', passwordVariable: 'aws_secret_key')]) {
-	   sh "echo aws_access_key=${aws_access_key} \n >> ${BUILD_ID}_terraform.tfvars"
-	   sh "echo aws_secret_key=${aws_secret_key} \n >> ${BUILD_ID}_terraform.tfvars"
-           sh "echo app_name=${app_name} \n >> ${BUILD_ID}_terraform.tfvars"
-	   sh "echo app_environment=${app_environment} \n >> ${BUILD_ID}_terraform.tfvars"
-	   sh "echo aws_region=${aws_region} \n >> ${BUILD_ID}_terraform.tfvars"
-	   sh "echo instance_type=${instance_type} \n >> ${BUILD_ID}_terraform.tfvars"
-	}
-	sh "cat ${BUILD_ID}_terraform.tfvars"
+	dir('aws') {     
+		withCredentials ([usernamePassword(credentialsId: 'aws_credentails', usernameVariable: 'aws_access_key', passwordVariable: 'aws_secret_key')]) {
+		   sh "echo aws_access_key=${aws_access_key} \n >> ${BUILD_ID}_terraform.tfvars"
+		   sh "echo aws_secret_key=${aws_secret_key} \n >> ${BUILD_ID}_terraform.tfvars"
+		   sh "echo app_name=${app_name} \n >> ${BUILD_ID}_terraform.tfvars"
+		   sh "echo app_environment=${app_environment} \n >> ${BUILD_ID}_terraform.tfvars"
+		   sh "echo aws_region=${aws_region} \n >> ${BUILD_ID}_terraform.tfvars"
+		   sh "echo instance_type=${instance_type} \n >> ${BUILD_ID}_terraform.tfvars"
+		}
+		sh "cat ${BUILD_ID}_terraform.tfvars"
+      	  }
       }
     }
     stage('Terraform Init') {
       steps {
-	sh "cd ${WORKSPACE}/aws"
-        sh "terraform init"
+	dir('aws') {   
+        	sh "terraform init"
+	}
       }
     }
     stage('Terraform Plan') {
       steps {
-	sh "cd ${WORKSPACE}/aws"
-        sh "terraform plan -out=tfplan -var-file=${BUILD_ID}_terraform.tfvars"
-        sh "terraform show -no-color tfplan > ${BUILD_ID}_tfplan.txt"
+	dir('aws') {   
+        	sh "terraform plan -out=tfplan -var-file=${BUILD_ID}_terraform.tfvars"
+        	sh "terraform show -no-color tfplan > ${BUILD_ID}_tfplan.txt"
+	}
       }
     }
   }
   post {
         always {
+		dir('aws') { 
             archiveArtifacts artifacts: "${BUILD_ID}_tfplan.txt"
+		}
         }
     }
 }
