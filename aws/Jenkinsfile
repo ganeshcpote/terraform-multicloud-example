@@ -18,13 +18,13 @@ pipeline {
 		   secret_key = aws_secret_key
 		}
 	}
-	dir('aws') {     
-	sh "echo aws_access_key=${access_key} \n >> ${BUILD_ID}_terraform.tfvars"
-	sh "echo aws_secret_key=${secret_key} \n >> ${BUILD_ID}_terraform.tfvars"
-	sh "echo app_name=${app_name} \n >> ${BUILD_ID}_terraform.tfvars"
-	sh "echo app_environment=${app_environment} \n >> ${BUILD_ID}_terraform.tfvars"
-	sh "echo aws_region=${aws_region} \n >> ${BUILD_ID}_terraform.tfvars"
-	sh "echo instance_type=${instance_type} \n >> ${BUILD_ID}_terraform.tfvars"
+	dir('aws') {
+	writeFile file: "${BUILD_ID}_terraform.tfvars", text: "aws_access_key=${access_key} \n"
+	writeFile file: "${BUILD_ID}_terraform.tfvars", text: "aws_secret_key=${secret_key} \n"
+	writeFile file: "${BUILD_ID}_terraform.tfvars", text: "app_name=${app_name} \n"
+	writeFile file: "${BUILD_ID}_terraform.tfvars", text: "app_environment=${app_environment} \n"
+	writeFile file: "${BUILD_ID}_terraform.tfvars", text: "aws_region=${aws_region} \n"
+	writeFile file: "${BUILD_ID}_terraform.tfvars", text: "instance_type=${instance_type} \n"
 	sh "cat ${BUILD_ID}_terraform.tfvars"
       	  }
       }
