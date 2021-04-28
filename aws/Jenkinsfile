@@ -1,3 +1,5 @@
+def access_key=""
+def secret_key=""
 pipeline {
   agent any
 
