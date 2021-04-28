@@ -34,7 +34,7 @@ variable "aws_region" {
 variable "tf_state_bucket" {
   type = string
   description = "S3 Bucket name for state file"
-  default = "tf-state"
+  default = "jenkins"
 }
 #AWS AZ
 variable "aws_az" {
