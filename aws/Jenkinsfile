@@ -10,7 +10,6 @@ pipeline {
   stages {
    stage('Preparations') {
       steps {
-	sh 'pwd'
 	withCredentials ([usernamePassword(credentialsId: 'aws_credentails', usernameVariable: 'aws_access_key', passwordVariable: 'aws_secret_key')]) {
 	   sh "echo aws_access_key=${aws_access_key} \n >> aws/${BUILD_ID}_terraform.tfvars"
 	   sh "echo aws_secret_key=${aws_secret_key} \n >> aws/${BUILD_ID}_terraform.tfvars"
@@ -19,7 +18,7 @@ pipeline {
 	   sh "echo aws_region=${aws_region} \n >> aws/${BUILD_ID}_terraform.tfvars"
 	   sh "echo instance_type=${instance_type} \n >> aws/${BUILD_ID}_terraform.tfvars"
 	}
-	sh 'cat aws/${BUILD_ID}_terraform.tfvars'
+	sh 'cd aws && cat ${BUILD_ID}_terraform.tfvars'
       }
     }
     stage('Terraform Init') {
