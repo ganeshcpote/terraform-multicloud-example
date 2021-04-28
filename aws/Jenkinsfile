@@ -21,12 +21,12 @@ pipeline {
 	}
 	dir('aws') {
 		script {
-			data = "aws_access_key='${access_key}'\n"
-			data = data + "aws_secret_key='${secret_key}'\n"
-			data = data + "app_name='${app_name}'\n"
-			data = data + "app_environment='${app_environment}'\n"
-			data = data + "aws_region='${aws_region}'\n"
-			data = data + "instance_type='${instance_type}'\n"
+			data = 'aws_access_key="${access_key}"\n'
+			data = data + 'aws_secret_key="${secret_key}"\n'
+			data = data + 'app_name="${app_name}"\n'
+			data = data + 'app_environment="${app_environment}"\n'
+			data = data + 'aws_region="${aws_region}"\n'
+			data = data + 'instance_type="${instance_type}"\n'
 		}
 	writeFile file: "${BUILD_ID}_terraform.tfvars", text: data
 	sh "cat ${BUILD_ID}_terraform.tfvars"
