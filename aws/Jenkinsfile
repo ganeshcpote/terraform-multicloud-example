@@ -10,16 +10,18 @@ pipeline {
   stages {
    stage('Preparations') {
       steps {
+	withCredentials ([usernamePassword(credentialsId: 'aws_credentails', usernameVariable: 'aws_access_key', passwordVariable: 'aws_secret_key')]) {
+	   access_key = ${aws_access_key}
+	   secret_key = ${aws_secret_key}
+	}
 	dir('aws') {     
-		withCredentials ([usernamePassword(credentialsId: 'aws_credentails', usernameVariable: 'aws_access_key', passwordVariable: 'aws_secret_key')]) {
-		   sh "echo aws_access_key=${aws_access_key} \n >> ${BUILD_ID}_terraform.tfvars"
-		   sh "echo aws_secret_key=${aws_secret_key} \n >> ${BUILD_ID}_terraform.tfvars"
-		   sh "echo app_name=${app_name} \n >> ${BUILD_ID}_terraform.tfvars"
-		   sh "echo app_environment=${app_environment} \n >> ${BUILD_ID}_terraform.tfvars"
-		   sh "echo aws_region=${aws_region} \n >> ${BUILD_ID}_terraform.tfvars"
-		   sh "echo instance_type=${instance_type} \n >> ${BUILD_ID}_terraform.tfvars"
-		}
-		sh "cat ${BUILD_ID}_terraform.tfvars"
+	sh "echo aws_access_key=${access_key} \n >> ${BUILD_ID}_terraform.tfvars"
+	sh "echo aws_secret_key=${secret_key} \n >> ${BUILD_ID}_terraform.tfvars"
+	sh "echo app_name=${app_name} \n >> ${BUILD_ID}_terraform.tfvars"
+	sh "echo app_environment=${app_environment} \n >> ${BUILD_ID}_terraform.tfvars"
+	sh "echo aws_region=${aws_region} \n >> ${BUILD_ID}_terraform.tfvars"
+	sh "echo instance_type=${instance_type} \n >> ${BUILD_ID}_terraform.tfvars"
+	sh "cat ${BUILD_ID}_terraform.tfvars"
       	  }
       }
     }
