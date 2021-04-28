@@ -18,17 +18,19 @@ pipeline {
 	   sh 'echo app_environment=${app_environment} \n >> terraform.tfvars'
 	   sh 'echo aws_region=${aws_region} \n >> terraform.tfvars'
 	   sh 'echo instance_type=${instance_type} \n >> terraform.tfvars'
-	   sh 'cat terraform.tfvars'
 	}
+	sh 'cat terraform.tfvars'
       }
     }
     stage('Terraform Init') {
       steps {
+	sh 'pwd'
         sh "terraform init"
       }
     }
     stage('Terraform Plan') {
       steps {
+	sh 'pwd'
         sh "terraform plan -out=tfplan -var-file=terraform.tfvars"
         sh "terraform show -no-color tfplan > tfplan.txt"
       }
