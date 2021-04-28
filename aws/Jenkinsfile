@@ -36,7 +36,7 @@ pipeline {
     stage('Terraform Init') {
       steps {
 	dir('aws') {   
-        	sh "terraform init"
+        	sh "terraform init -backend-config 'bucket=jenkins' -backend-config 'region=${region}' -backend-config 'key=tf-state/${BUILD_ID}_terraform.tfstate'"
 	}
       }
     }
