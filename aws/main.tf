@@ -1,7 +1,7 @@
 provider "aws" {
   region                = "${var.aws_region}"
   access_key            = "${var.aws_access_key}"
-  aws_secret_key        = "${var.aws_secret_key}"
+  secret_key            = "${var.aws_secret_key}"
 }
 
 module "aws_deployment" {
