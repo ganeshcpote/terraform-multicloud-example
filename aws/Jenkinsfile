@@ -10,16 +10,16 @@ pipeline {
   stages {
    stage('Preparations') {
       steps {
-	sh "cd aws/"
+	sh 'pwd'
 	withCredentials ([usernamePassword(credentialsId: 'aws_credentails', usernameVariable: 'aws_access_key', passwordVariable: 'aws_secret_key')]) {
-	   sh 'echo aws_access_key=${aws_access_key} \n >> terraform.tfvars'
-	   sh 'echo aws_secret_key=${aws_secret_key} \n >> terraform.tfvars'
-           sh 'echo app_name=${app_name} \n >> terraform.tfvars'
-	   sh 'echo app_environment=${app_environment} \n >> terraform.tfvars'
-	   sh 'echo aws_region=${aws_region} \n >> terraform.tfvars'
-	   sh 'echo instance_type=${instance_type} \n >> terraform.tfvars'
+	   sh "echo aws_access_key=${aws_access_key} \n >> aws/${BUILD_ID}_terraform.tfvars"
+	   sh "echo aws_secret_key=${aws_secret_key} \n >> aws/${BUILD_ID}_terraform.tfvars"
+           sh "echo app_name=${app_name} \n >> aws/${BUILD_ID}_terraform.tfvars"
+	   sh "echo app_environment=${app_environment} \n >> aws/${BUILD_ID}_terraform.tfvars"
+	   sh "echo aws_region=${aws_region} \n >> aws/${BUILD_ID}_terraform.tfvars"
+	   sh "echo instance_type=${instance_type} \n >> aws/${BUILD_ID}_terraform.tfvars"
 	}
-	sh 'cat terraform.tfvars'
+	sh 'cat aws/${BUILD_ID}_terraform.tfvars'
       }
     }
     stage('Terraform Init') {
@@ -33,15 +33,14 @@ pipeline {
       steps {
 	sh "cd aws/"
 	sh 'pwd'
-        sh "terraform plan -out=tfplan -var-file=terraform.tfvars"
-        sh "terraform show -no-color tfplan > tfplan.txt"
+        sh "terraform plan -out=tfplan -var-file=aws/${BUILD_ID}_terraform.tfvars"
+        sh "terraform show -no-color tfplan > aws/${BUILD_ID}_tfplan.txt"
       }
     }
   }
   post {
         always {
-            archiveArtifacts artifacts: 'tfplan.txt'
-            cleanWs()
+            archiveArtifacts artifacts: "${BUILD_ID}_tfplan.txt"
         }
     }
 }
