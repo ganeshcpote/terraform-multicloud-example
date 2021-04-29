@@ -33,21 +33,15 @@ pipeline {
       	  }
       }
     }
-   stage('Workspace Creation') {
-      steps {
-	dir('aws') {   
-		sh "terraform workspace new ${BUILD_ID}-state"
-	}
-      }
-    }
     stage('Terraform Init') {
       steps {
 	dir('aws') {   
+		sh "terraform init  -input=false -backend-config=\"bucket=jenkins\" -backend-config=\"access_key=${access_key}\" -backend-config=\"secret_key=${secret_key}\" -backend-config=\"region=${aws_region}\" -backend-config=\"key=tf-state/${BUILD_ID}_terraform.tfstate\""
+		sh "terraform workspace new ${BUILD_ID}-state"
 		sh "terraform workspace select  ${BUILD_ID}-state"
-		sh "terraform workspace show"
-        	sh "terraform init  -input=false -backend-config=\"bucket=jenkins\" -backend-config=\"access_key=${access_key}\" -backend-config=\"secret_key=${secret_key}\" -backend-config=\"region=${aws_region}\" -backend-config=\"key=tf-state/${BUILD_ID}_terraform.tfstate\""
-	}
-      }
+		sh "terraform workspace show"        	
+	  }
+       }
     }
     stage('Terraform Plan') {
       steps {
