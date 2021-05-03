@@ -63,11 +63,13 @@ pipeline {
     }
   stage('Terraform Destroy Approval') {
 	   steps {
+		   dir('aws') {  
             script {
                 def plan = readFile "${BUILD_ID}_tfplan.txt"
                 input message: "Do you want to destroy the plan?",
                     parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
             }
+		   }
         }
     }
 stage('Terraform Destroy') {
