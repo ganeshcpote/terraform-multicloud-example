@@ -4,7 +4,7 @@ terraform {
     }
 }
 
-data "terraform_remote_state" "states" {
+data "terraform_remote_state" "aws_deployment" {
   backend = "pg"
   config = {
     conn_str    = "postgres://jenkins:jenkins@localhost/terraformstate?sslmode=disable"
