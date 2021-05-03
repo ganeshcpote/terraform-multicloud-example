@@ -41,7 +41,8 @@ pipeline {
 		sh "terraform workspace new ${BUILD_ID}-state"
 		sh "terraform init -backend-config=\"conn_str=postgres://jenkins:jenkins@localhost/terraformstate?sslmode=disable\" -input=false"
 		sh "terraform workspace select  ${BUILD_ID}-state"
-		sh "terraform workspace show"        	
+		sh "terraform workspace show"   
+		sh "terraform remote pull"
 	  }
        }
     }
