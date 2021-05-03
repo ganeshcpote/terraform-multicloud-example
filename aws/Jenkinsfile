@@ -76,7 +76,7 @@ stage('Terraform Destroy') {
       steps {
 	dir('aws') {   
 		sh "terraform workspace select  ${BUILD_ID}-state"
-        	sh "terraform destroy -input=false -auto-approve"
+        	sh "terraform destroy -input=false -auto-approve -var-file=${BUILD_ID}_terraform.tfvars"
 	}
       }
     }
