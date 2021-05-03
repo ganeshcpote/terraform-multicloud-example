@@ -16,5 +16,8 @@ module "aws_deployment" {
     aws_vpc_cidr        = var.aws_vpc_cidr
     aws_subnet_cidr     = var.aws_subnet_cidr
     instance_type       = var.instance_type
+    config              = {
+        conn_str    = "postgres://jenkins:jenkins@localhost/terraformstate?sslmode=disable"
+      }
 }
 
