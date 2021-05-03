@@ -1,6 +1,7 @@
 def access_key=""
 def secret_key=""
 def data = ""
+def BUILD_ID=76
 pipeline {
   agent any
 
