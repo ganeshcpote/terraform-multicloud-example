@@ -57,6 +57,7 @@ pipeline {
       steps {
 	dir('aws') {   
         	sh "terraform apply -input=false -auto-approve tfplan"
+		sh "terraform show -json -no-color tfplan > ${BUILD_ID}_tfplan.json"
 	}
       }
     }
