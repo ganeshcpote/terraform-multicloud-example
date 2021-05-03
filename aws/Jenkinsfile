@@ -1,7 +1,6 @@
 def access_key=""
 def secret_key=""
 def data = ""
-def BUILD_ID=76
 pipeline {
   agent any
 
@@ -58,6 +57,23 @@ pipeline {
       steps {
 	dir('aws') {   
         	sh "terraform apply -input=false -auto-approve tfplan"
+	}
+      }
+    }
+  stage('Terraform Destroy Approval') {
+	   steps {
+            script {
+                def plan = readFile "${BUILD_ID}_tfplan.txt"
+                input message: "Do you want to destroy the plan?",
+                    parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
+            }
+        }
+    }
+stage('Terraform Destroy') {
+      steps {
+	dir('aws') {   
+		sh "terraform workspace select  ${BUILD_ID}-state"
+        	sh "terraform destroy -input=false -auto-approve"
 	}
       }
     }
