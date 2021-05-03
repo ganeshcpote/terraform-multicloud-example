@@ -47,7 +47,7 @@ pipeline {
     stage('Terraform Plan') {
       steps {
 	dir('aws') {   
-        	sh "terraform plan -out=tfplan -var-file=${BUILD_ID}_terraform.tfvars" -backend-config=\"conn_str=postgres://jenkins:jenkins@localhost/terraformstate?sslmode=disable\""
+        	sh "terraform plan -out=tfplan -var-file=${BUILD_ID}_terraform.tfvars -backend-config=\"conn_str=postgres://jenkins:jenkins@localhost/terraformstate?sslmode=disable\""
         	sh "terraform show -no-color tfplan -backend-config=\"conn_str=postgres://jenkins:jenkins@localhost/terraformstate?sslmode=disable\"" > ${BUILD_ID}_tfplan.txt"
 	}
       }
