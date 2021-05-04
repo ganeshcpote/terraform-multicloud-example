@@ -32,7 +32,7 @@ pipeline {
 			data = data + "azure_client_id=\"${azure_client_id}\"\n"
 			data = data + "azure_client_secret=\"${azure_client_secret}\"\n"
 			data = data + "rg_location=\"${rg_location}\"\n"
-			data = data + "vm_size=\"${instance_type}\"\n"
+			data = data + "vm_size=\"${vm_size}\"\n"
 		}
 	writeFile file: "${BUILD_ID}_terraform.tfvars", text: data
 	sh "cat ${BUILD_ID}_terraform.tfvars"
