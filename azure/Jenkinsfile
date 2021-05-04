@@ -9,7 +9,7 @@ pipeline {
   parameters {
         string(name: 'app_name', defaultValue: 'test1', description: 'Provide Application name to be deploy') 
 		choice(name: 'app_environment', choices: ['dev', 'qa', 'pre-prod', 'prod'], description: 'Specify environment' )
-		choice(name: 'rg_location', choices: ['West Europe'], description: 'Specify aws region' )
+		choice(name: 'rg_location', choices: ['West Europe'], description: 'Specify Azure region' )
 		choice(name: 'vm_size', choices: ['Standard_B1s'], description: 'Specify VM Size' )
     }
   stages {
