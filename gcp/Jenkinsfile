@@ -1,7 +1,7 @@
 def access_key=""
 def secret_key=""
 def data = ""
-def gcp_auth_file = "/tmp/cred.json"
+def gcp_auth_file = "/tmp/ganesh/cred.json"
 pipeline {
   agent any
 
