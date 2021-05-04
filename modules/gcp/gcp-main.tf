@@ -29,6 +29,7 @@ resource "google_compute_firewall" "gcp-allow-http" {
     protocol = "tcp"
     ports = ["80"]
   }
+  source_tags = ["http"]
   target_tags = ["http"]
 }
 #Create a public ip for web server
@@ -44,7 +45,7 @@ data "template_file" "metadata_startup_script" {
 #Create VM for web server
 resource "google_compute_instance" "gpc-web-server" {
   name = "${var.app_name}-${var.app_environment}-web-server"
-  machine_type = "f1-micro"
+  machine_type = var.machine_type
   zone = var.gcp_zone
   tags = ["http"]
   boot_disk {

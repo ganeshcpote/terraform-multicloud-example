@@ -40,7 +40,6 @@ variable "gcp_subnet_cidr" {
   default = "10.3.1.0/24"
 }
 
-
 #Define machine_type
 variable "machine_type" {
   type = string
