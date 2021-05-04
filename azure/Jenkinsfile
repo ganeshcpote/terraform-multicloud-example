@@ -1,7 +1,7 @@
-def azure_subscription_id=""
-def azure_tenant_id=""
-def azure_client_id=""
-def azure_client_secret=""
+def subscription_id=""
+def tenant_id=""
+def client_id=""
+def client_secret=""
 def data = ""
 pipeline {
   agent any
@@ -17,20 +17,20 @@ pipeline {
       steps {
 	script {
 		withCredentials ([usernamePassword(credentialsId: 'azure-sub-tenant-id', usernameVariable: 'azure_subscription_id', passwordVariable: 'azure_tenant_id')]) {
-		   azure_subscription_id = azure_subscription_id
-		   azure_tenant_id = azure_tenant_id
+		   subscription_id = azure_subscription_id
+		   tenant_id = azure_tenant_id
 		}
 		withCredentials ([usernamePassword(credentialsId: 'azure-clientid-secret', usernameVariable: 'azure_client_id', passwordVariable: 'azure_client_secret')]) {
-		   azure_client_id = azure_client_id
-		   azure_client_secret = azure_client_secret
+		   client_id = azure_client_id
+		   client_secret = azure_client_secret
 		}
 	}
 	dir('azure') {
 		script {
-			data = "azure_subscription_id=\"${azure_subscription_id}\"\n"
-			data = data + "azure_tenant_id=\"${azure_tenant_id}\"\n"
-			data = data + "azure_client_id=\"${azure_client_id}\"\n"
-			data = data + "azure_client_secret=\"${azure_client_secret}\"\n"
+			data = "azure_subscription_id=\"${subscription_id}\"\n"
+			data = data + "azure_tenant_id=\"${tenant_id}\"\n"
+			data = data + "azure_client_id=\"${client_id}\"\n"
+			data = data + "azure_client_secret=\"${client_secret}\"\n"
 			data = data + "rg_location=\"${rg_location}\"\n"
 			data = data + "vm_size=\"${vm_size}\"\n"
 		}
