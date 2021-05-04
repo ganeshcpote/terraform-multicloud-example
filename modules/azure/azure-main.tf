@@ -5,6 +5,7 @@ provider "azurerm" {
   client_id = var.azure_client_id
   client_secret = var.azure_client_secret
   tenant_id = var.azure_tenant_id
+  features {}
 }
 #Create Resource Group
 resource "azurerm_resource_group" "azure-rg" {
@@ -69,7 +70,7 @@ resource "azurerm_network_interface" "azure-web-nic" {
   name = "${var.app_name}-${var.app_environment}-web-nic"
   location = azurerm_resource_group.azure-rg.location
   resource_group_name = azurerm_resource_group.azure-rg.name
-  network_security_group_id = azurerm_network_security_group.azure-web-nsg.id
+  #network_security_group_id = azurerm_network_security_group.azure-web-nsg.id
   ip_configuration {
     name = "internal"
     subnet_id = azurerm_subnet.azure-subnet.id
@@ -86,7 +87,7 @@ resource "azurerm_virtual_machine" "azure-web-vm" {
   location = azurerm_resource_group.azure-rg.location
   resource_group_name = azurerm_resource_group.azure-rg.name
   network_interface_ids = [azurerm_network_interface.azure-web-nic.id]
-  vm_size = "Standard_B1s"
+  vm_size = var.vm_size
   delete_os_disk_on_termination = true
   delete_data_disks_on_termination = true
   storage_image_reference {
@@ -111,7 +112,8 @@ resource "azurerm_virtual_machine" "azure-web-vm" {
     disable_password_authentication = false
   }
   tags = {
-    environment = var.app_environment
+    env = var.app_environment
+    appname = var.app_name
   }
 }
 #Output

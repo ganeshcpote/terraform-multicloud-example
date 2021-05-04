@@ -1,0 +1,98 @@
+def azure_subscription_id=""
+def azure_tenant_id=""
+def azure_client_id=""
+def azure_client_secret=""
+def data = ""
+pipeline {
+  agent any
+
+  parameters {
+        string(name: 'app_name', defaultValue: 'test1', description: 'Provide Application name to be deploy') 
+		choice(name: 'app_environment', choices: ['dev', 'qa', 'pre-prod', 'prod'], description: 'Specify environment' )
+		choice(name: 'rg_location', choices: ['West Europe'], description: 'Specify aws region' )
+		choice(name: 'vm_size', choices: ['Standard_B1s'], description: 'Specify VM Size' )
+    }
+  stages {
+   stage('Preparations') {
+      steps {
+	script {
+		withCredentials ([usernamePassword(credentialsId: 'azure-sub-tenant-id', usernameVariable: 'azure_subscription_id', passwordVariable: 'azure_tenant_id')]) {
+		   azure_subscription_id = azure_subscription_id
+		   azure_tenant_id = azure_tenant_id
+		}
+		withCredentials ([usernamePassword(credentialsId: 'azure-clientid-secret', usernameVariable: 'azure_client_id', passwordVariable: 'azure_client_secret')]) {
+		   azure_client_id = azure_client_id
+		   azure_client_secret = azure_client_secret
+		}
+	}
+	dir('aws') {
+		script {
+			data = "azure_subscription_id=\"${azure_subscription_id}\"\n"
+			data = data + "azure_tenant_id=\"${azure_tenant_id}\"\n"
+			data = data + "azure_client_id=\"${azure_client_id}\"\n"
+			data = data + "azure_client_secret=\"${azure_client_secret}\"\n"
+			data = data + "rg_location=\"${aws_region}\"\n"
+			data = data + "vm_size=\"${instance_type}\"\n"
+		}
+	writeFile file: "${BUILD_ID}_terraform.tfvars", text: data
+	sh "cat ${BUILD_ID}_terraform.tfvars"
+      	  }
+      }
+    }
+    stage('Terraform Init') {
+      steps {
+	dir('aws') {  
+		sh "terraform init -backend-config=\"conn_str=postgres://jenkins:jenkins@localhost/terraformstate?sslmode=disable\" -input=false"
+		//sh "terraform init  -input=false -backend-config=\"bucket=jenkins\" -backend-config=\"access_key=${access_key}\" -backend-config=\"secret_key=${secret_key}\" -backend-config=\"region=${aws_region}\" -backend-config=\"key=tf-state/${BUILD_ID}_terraform.tfstate\""
+		sh "terraform workspace new ${BUILD_ID}-state"
+		sh "terraform workspace select  ${BUILD_ID}-state"
+		sh "terraform workspace show"
+		sh "terraform state pull"
+	  }
+       }
+    }
+    stage('Terraform Plan') {
+      steps {
+	dir('aws') {   
+        	sh "terraform plan -out=tfplan -var-file=${BUILD_ID}_terraform.tfvars"
+        	sh "terraform show -no-color tfplan > ${BUILD_ID}_tfplan.txt"
+	}
+      }
+    }
+   stage('Terraform Apply') {
+      steps {
+	dir('aws') {   
+        	sh "terraform apply -input=false -auto-approve tfplan"
+		sh "terraform output"
+	}
+      }
+    }
+  stage('Terraform Destroy Approval') {
+	   steps {
+		   dir('aws') {  
+            script {
+                def plan = readFile "${BUILD_ID}_tfplan.txt"
+                input message: "Do you want to destroy the plan?",
+                    parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
+            }
+		   }
+        }
+    }
+stage('Terraform Destroy') {
+      steps {
+	dir('aws') {   
+		sh "terraform workspace select  ${BUILD_ID}-state"
+        	sh "terraform destroy -input=false -auto-approve -var-file=${BUILD_ID}_terraform.tfvars"
+	}
+      }
+    }
+  }
+  post {
+        always {
+		dir('aws') { 
+            archiveArtifacts artifacts: "${BUILD_ID}_tfplan.txt"
+			//cleanWs()
+		}
+        }
+    }
+}
