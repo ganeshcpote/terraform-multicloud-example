@@ -29,7 +29,7 @@ resource "google_compute_firewall" "gcp-allow-http" {
     protocol = "tcp"
     ports = ["80"]
   }
-  source_tags = ["http"]
+  source_ranges = ["0.0.0.0/0"]
   target_tags = ["http"]
 }
 #Create a public ip for web server
@@ -63,6 +63,6 @@ resource "google_compute_instance" "gpc-web-server" {
   }
 }
 #Output
-output "external-ip-gcp-web-server" {
-  value = google_compute_address.gcp-web-ip.address
+output "external-ip" {
+  value = "${google_compute_instance.gpc-web-server.network_interface.0.access_config.0.nat_ip}"
 }

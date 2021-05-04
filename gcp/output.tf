@@ -58,8 +58,8 @@ output "project_name" {
   value = module.gcp_deployment.project_name
 } 
 
-output "external-ip-gcp-web-server" {
-  value = module.gcp_deployment.external-ip-gcp-web-server
+output "external-ip" {
+  value = module.gcp_deployment.external-ip
 } 
 
 output "self_link" {
