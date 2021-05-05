@@ -74,7 +74,6 @@ pipeline {
 				security_group_id = sh(returnStdout: true, script: 'terraform output -raw security_group_id').trim()
 				security_group_name = sh(returnStdout: true, script: 'terraform output -raw security_group_name').trim()
 				resource_group_name = sh(returnStdout: true, script: 'terraform output -raw resource_group_name').trim()
-				
 				public_ip_address = sh(returnStdout: true, script: 'terraform output -raw public_ip_address').trim()
 				vm_size = sh(returnStdout: true, script: 'terraform output -raw vm_size').trim()
 				vm_location = sh(returnStdout: true, script: 'terraform output -raw vm_location').trim()
