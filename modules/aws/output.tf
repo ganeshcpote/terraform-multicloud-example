@@ -38,12 +38,12 @@ output "placement_group" {
   value = "${aws_instance.aws-web-server.placement_group}"
 }
 
-output "public_id" {
-  value = "${aws_instance.aws-web-server.public_ip}"
+output "public_ip" {
+  value = "${aws_eip_association.aws-web-eip-association.public_ip}"
 }
 
 output "public_dns" {
-  value = "${aws_instance.aws-web-server.public_dns}"
+  value = "${aws_eip_association.aws-web-eip-association.public_dns}"
 }
 
 output "private_ip" {
