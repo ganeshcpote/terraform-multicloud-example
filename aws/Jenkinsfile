@@ -104,7 +104,7 @@ pipeline {
 		mail 	to: 'ganesh.pote@ril.com', 
 				from: 'jenkins@example.com',
 				mimeType: 'text/html',
-				subject: "Your deployment request number \"${BUILD_ID}\" status - Completed", 
+				subject: "Your deployment request number \"${BUILD_ID}\" Status - Completed", 
 				body: html_body
 		  }
     }
