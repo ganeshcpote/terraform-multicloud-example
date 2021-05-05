@@ -45,8 +45,8 @@ pipeline {
 	dir('azure') {  
 		sh "terraform init -backend-config=\"conn_str=postgres://jenkins:jenkins@localhost/terraformstate?sslmode=disable\" -input=false"
 		//sh "terraform init  -input=false -backend-config=\"bucket=jenkins\" -backend-config=\"access_key=${access_key}\" -backend-config=\"secret_key=${secret_key}\" -backend-config=\"region=${aws_region}\" -backend-config=\"key=tf-state/${BUILD_ID}_terraform.tfstate\""
-		sh "terraform workspace new ${JOB_NAME}_${BUILD_ID}_state"
-		sh "terraform workspace select  ${JOB_NAME}_${BUILD_ID}_state"
+		sh "terraform workspace new azure_${BUILD_ID}_state"
+		sh "terraform workspace select  azure_${BUILD_ID}_state"
 		sh "terraform workspace show"
 		sh "terraform state pull"
 	  }
@@ -135,7 +135,7 @@ pipeline {
   stage('Terraform Destroy') {
       steps {
 		dir('azure') {   
-			sh "terraform workspace select  ${JOB_NAME}_${BUILD_ID}_state"
+			sh "terraform workspace select azure_${BUILD_ID}_state"
 			sh "terraform destroy -input=false -auto-approve -var-file=${BUILD_ID}_terraform.tfvars"
 		}
       }
