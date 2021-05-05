@@ -95,7 +95,7 @@ pipeline {
 			html_body = html_body + "Below are the provisioning details for your reference : <br/><br/>"
 			html_body = html_body + "<table>"
 			html_body = html_body + "<tr><td>Deployment ID:</td><td>${BUILD_ID}</td></tr>"
-			html_body = html_body + "<tr><td>Cloud Provider:</td><td>Azure/td></tr>"
+			html_body = html_body + "<tr><td>Cloud Provider:</td><td>Azure</td></tr>"
 			html_body = html_body + "<tr><td>VNET ID:</td><td>${vnet_id}</td></tr>"
 			html_body = html_body + "<tr><td>Application Url:</td><td>${application_url}</td></tr>"
 			html_body = html_body + "<tr><td>Subnet ID:</td><td>${subnet_id}</td></tr>"
