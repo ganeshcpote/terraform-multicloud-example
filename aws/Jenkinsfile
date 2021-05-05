@@ -58,9 +58,9 @@ pipeline {
 		dir('aws') {   
 			sh "terraform apply -input=false -auto-approve tfplan"
 			sh "terraform output"
-			ami = sh(returnStdout: true, script: 'terraform output -raw ami').trim()
-			sh "echo ami=${ami}"
+			
 			script{
+				ami = sh(returnStdout: true, script: 'terraform output -raw ami').trim()
 				application_url = sh(returnStdout: true, script: 'terraform output -raw application_url').trim()
 				arn = sh(returnStdout: true, script: 'terraform output -raw arn').trim()
 				availability_zone = sh(returnStdout: true, script: 'terraform output -raw availability_zone').trim()
