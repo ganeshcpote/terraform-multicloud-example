@@ -34,8 +34,8 @@ output "availability_zone" {
   value = module.aws_deployment.availability_zone
 } 
 
-output "public_id" {
-  value = module.aws_deployment.public_id
+output "public_ip" {
+  value = module.aws_deployment.public_ip
 } 
 
 output "public_dns" {
