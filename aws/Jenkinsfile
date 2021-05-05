@@ -35,62 +35,78 @@ pipeline {
     }
     stage('Terraform Init') {
       steps {
-	dir('aws') {  
-		sh "terraform init -backend-config=\"conn_str=postgres://jenkins:jenkins@localhost/terraformstate?sslmode=disable\" -input=false"
-		//sh "terraform init  -input=false -backend-config=\"bucket=jenkins\" -backend-config=\"access_key=${access_key}\" -backend-config=\"secret_key=${secret_key}\" -backend-config=\"region=${aws_region}\" -backend-config=\"key=tf-state/${BUILD_ID}_terraform.tfstate\""
-		sh "terraform workspace new ${BUILD_ID}-state"
-		sh "terraform workspace select  ${BUILD_ID}-state"
-		sh "terraform workspace show"
-		sh "terraform state pull"
-	  }
+		dir('aws') {  
+			sh "terraform init -backend-config=\"conn_str=postgres://jenkins:jenkins@localhost/terraformstate?sslmode=disable\" -input=false"
+			//sh "terraform init  -input=false -backend-config=\"bucket=jenkins\" -backend-config=\"access_key=${access_key}\" -backend-config=\"secret_key=${secret_key}\" -backend-config=\"region=${aws_region}\" -backend-config=\"key=tf-state/${BUILD_ID}_terraform.tfstate\""
+			sh "terraform workspace new ${BUILD_ID}-state"
+			sh "terraform workspace select  ${BUILD_ID}-state"
+			sh "terraform workspace show"
+			sh "terraform state pull"
+		  }
        }
-    }
+    }	
     stage('Terraform Plan') {
       steps {
-	dir('aws') {   
-        	sh "terraform plan -out=tfplan -var-file=${BUILD_ID}_terraform.tfvars"
-        	sh "terraform show -no-color tfplan > ${BUILD_ID}_tfplan.txt"
-	}
+		dir('aws') {   
+				sh "terraform plan -out=tfplan -var-file=${BUILD_ID}_terraform.tfvars"
+				sh "terraform show -no-color tfplan > ${BUILD_ID}_tfplan.txt"
+		}
       }
     }
    stage('Terraform Apply') {
       steps {
-	dir('aws') {   
-        	sh "terraform apply -input=false -auto-approve tfplan"
-		sh "terraform output"
-	}
+		dir('aws') {   
+			sh "terraform apply -input=false -auto-approve tfplan"
+			sh "terraform output"
+			ami = sh(returnStdout: true, script: 'terraform output -raw ami').trim()
+			sh "echo ami=${ami}"
+			script{
+				application_url = sh(returnStdout: true, script: 'terraform output -raw application_url').trim()
+				arn = sh(returnStdout: true, script: 'terraform output -raw arn').trim()
+				availability_zone = sh(returnStdout: true, script: 'terraform output -raw availability_zone').trim()
+				instance_type = sh(returnStdout: true, script: 'terraform output -raw instance_type').trim()
+				key_name = sh(returnStdout: true, script: 'terraform output -raw key_name').trim()
+				private_dns = sh(returnStdout: true, script: 'terraform output -raw private_dns').trim()
+				private_ip = sh(returnStdout: true, script: 'terraform output -raw private_ip').trim()
+				public_dns = sh(returnStdout: true, script: 'terraform output -raw public_dns').trim()
+				public_id = sh(returnStdout: true, script: 'terraform output -raw public_id').trim()
+				route_table_id = sh(returnStdout: true, script: 'terraform output -raw route_table_id').trim()
+				subnet_id = sh(returnStdout: true, script: 'terraform output -raw subnet_id').trim()
+				vpc_id = sh(returnStdout: true, script: 'terraform output -raw vpc_id').trim()
+			}
+		}
       }
     }
   stage('Send Email') {
       steps {
-	script{
-	    html_body = "Dear User, <br/><br/>" 
-	    html_body = html_body + "Your request number <b> ${BUILD_ID} </b> has been approved and completed.<br/><br/>"
-	    html_body = html_body + "Below are the provisioning details for your reference : <br/><br/>"
-	    html_body = html_body + "<table>"
-	    html_body = html_body + "<tr><td>Deployment Ref ID:</td><td>${BUILD_ID}</td></tr>"
-	    html_body = html_body + "<tr><td>ami:</td><td>"+sh(returnStdout: true, script: 'terraform output -raw ami').trim()+"</td></tr>"
-	    html_body = html_body + "<tr><td>Application Url:</td><td>"+sh(returnStdout: true, script: 'terraform output -raw application_url').trim()+"</td></tr>"
-	    html_body = html_body + "<tr><td>Instance arn:</td><td>"+sh(returnStdout: true, script: 'terraform output -raw arn').trim()+"</td></tr>"
-	    html_body = html_body + "<tr><td>Availability Zone</td><td>"+sh(returnStdout: true, script: 'terraform output -raw availability_zone').trim()+"</td></tr>"
-	    html_body = html_body + "<tr><td>Instance Type:</td><td>"+sh(returnStdout: true, script: 'terraform output -raw instance_type').trim()+"</td></tr>"
-        html_body = html_body + "<tr><td>Key Name:</td><td>"+sh(returnStdout: true, script: 'terraform output -raw key_name').trim()+"</td></tr>"
-	    html_body = html_body + "<tr><td>Private DNS:</td><td>"+sh(returnStdout: true, script: 'terraform output -raw private_dns').trim()+"</td></tr>"
-	    html_body = html_body + "<tr><td>Private IP:</td><td>"+sh(returnStdout: true, script: 'terraform output -raw private_ip').trim()+"</td></tr>"
-        html_body = html_body + "<tr><td>Public DNS:</td><td>"+sh(returnStdout: true, script: 'terraform output -raw public_dns').trim()+"</td></tr>"
-	    html_body = html_body + "<tr><td>Public IP:</td><td>"+sh(returnStdout: true, script: 'terraform output -raw public_id').trim()+"</td></tr>"
-	    html_body = html_body + "<tr><td>Route Table ID:</td><td>"+sh(returnStdout: true, script: 'terraform output -raw route_table_id').trim()+"</td></tr>"		
-	    html_body = html_body + "<tr><td>Subnet ID:</td><td>"+sh(returnStdout: true, script: 'terraform output -raw subnet_id').trim()+"</td></tr>"		
-	    html_body = html_body + "<tr><td>VPC ID:</td><td>"+sh(returnStdout: true, script: 'terraform output -raw vpc_id').trim()+"</td></tr>"		
-	    html_body = html_body + "</table>"
-	    html_body = html_body + "<br/><br/>Thanks, </br>Deployment Team"
-	}
-	mail 	to: 'ganesh.pote@ril.com', 
-		from: 'jenkins@example.com',
-	    	mimeType: 'text/html',
-	    	subject: "Example Build: ${env.JOB_NAME} - Failed", 
-	    	body: html_body
-      }
+		script{
+			html_body = "Dear User, <br/><br/>" 
+			html_body = html_body + "Your request number <b> ${BUILD_ID} </b> has been approved and completed.<br/><br/>"
+			html_body = html_body + "Below are the provisioning details for your reference : <br/><br/>"
+			html_body = html_body + "<table>"
+			html_body = html_body + "<tr><td>Deployment Ref ID:</td><td>${BUILD_ID}</td></tr>"
+			html_body = html_body + "<tr><td>ami:</td><td>${ami}</td></tr>"
+			html_body = html_body + "<tr><td>Application Url:</td><td>${application_url}</td></tr>"
+			html_body = html_body + "<tr><td>Instance arn:</td><td>${arn}</td></tr>"
+			html_body = html_body + "<tr><td>Availability Zone</td><td>${availability_zone}</td></tr>"
+			html_body = html_body + "<tr><td>Instance Type:</td><td>${instance_type}</td></tr>"
+			html_body = html_body + "<tr><td>Key Name:</td><td>${key_name}</td></tr>"
+			html_body = html_body + "<tr><td>Private DNS:</td><td>${private_dns}</td></tr>"
+			html_body = html_body + "<tr><td>Private IP:</td><td>${private_ip}</td></tr>"
+			html_body = html_body + "<tr><td>Public DNS:</td><td>${public_dns}</td></tr>"
+			html_body = html_body + "<tr><td>Public IP:</td><td>${public_id}</td></tr>"
+			html_body = html_body + "<tr><td>Route Table ID:</td><td>${route_table_id}</td></tr>"		
+			html_body = html_body + "<tr><td>Subnet ID:</td><td>${subnet_id}</td></tr>"		
+			html_body = html_body + "<tr><td>VPC ID:</td><td>${vpc_id}</td></tr>"		
+			html_body = html_body + "</table>"
+			html_body = html_body + "<br/><br/>Thanks, </br>Deployment Team"
+		}
+		mail 	to: 'ganesh.pote@ril.com', 
+				from: 'jenkins@example.com',
+				mimeType: 'text/html',
+				subject: "Example Build: ${env.JOB_NAME} - Failed", 
+				body: html_body
+		  }
     }
   stage('Terraform Destroy Approval') {
 	   steps {
@@ -105,19 +121,19 @@ pipeline {
     }
 stage('Terraform Destroy') {
       steps {
-	dir('aws') {   
-		sh "terraform workspace select  ${BUILD_ID}-state"
-        	sh "terraform destroy -input=false -auto-approve -var-file=${BUILD_ID}_terraform.tfvars"
-	}
+		dir('aws') {   
+			sh "terraform workspace select  ${BUILD_ID}-state"
+				sh "terraform destroy -input=false -auto-approve -var-file=${BUILD_ID}_terraform.tfvars"
+		}
       }
     }
   }
   post {
         always {
-		dir('aws') { 
-            archiveArtifacts artifacts: "${BUILD_ID}_tfplan.txt"
-			//cleanWs()
-		}
+			dir('aws') { 
+				archiveArtifacts artifacts: "${BUILD_ID}_tfplan.txt"
+				//cleanWs()
+			}
         }
     }
 }
