@@ -55,5 +55,5 @@ output "instance_type" {
 }
 
 output "application_url" {
-  value = "http://${module.aws_deployment.public_dns}"
+  value = "http://${module.aws_deployment.public_ip}"
 }
