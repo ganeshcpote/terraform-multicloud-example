@@ -118,7 +118,7 @@ pipeline {
 			mail	to: "${user_email}", 
 			from: 'jenkins@example.com',
 			mimeType: 'text/html',
-			subject: "Your deployment request number \"${BUILD_ID}\" Status - Completed", 
+			subject: "Your Azure Cloud deployment request number \"${BUILD_ID}\" Status - Completed", 
 			body: html_body
 		  }
   }
