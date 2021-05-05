@@ -1,3 +1,3 @@
 # Terraform Multicloud Example
 
-![Jenkins](images/jenkins.png)
+![Jenkins](/images/jenkins.png)
