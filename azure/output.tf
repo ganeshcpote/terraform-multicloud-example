@@ -57,3 +57,7 @@ output "vm_disk_size_gb" {
 output "vm_image" {
   value = module.azure_deployment.vm_image
 }
+
+output "application_url" {
+  value = "http://${module.aws_deployment.public_ip_address}"
+}
