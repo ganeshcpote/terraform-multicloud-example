@@ -86,6 +86,7 @@ pipeline {
 			html_body = html_body + "Below are the provisioning details for your reference : <br/><br/>"
 			html_body = html_body + "<table>"
 			html_body = html_body + "<tr><td>Deployment ID:</td><td>${BUILD_ID}</td></tr>"
+			html_body = html_body + "<tr><td>Cloud Provider:</td><td>AWS/td></tr>"
 			html_body = html_body + "<tr><td>AMI ID:</td><td>${ami}</td></tr>"
 			html_body = html_body + "<tr><td>Application Url:</td><td>${application_url}</td></tr>"
 			html_body = html_body + "<tr><td>Instance arn:</td><td>${arn}</td></tr>"
