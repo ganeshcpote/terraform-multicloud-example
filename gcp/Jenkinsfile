@@ -85,7 +85,7 @@ stage('Terraform Destroy') {
   }
   post {
         always {
-		dir('aws') { 
+		dir('gcp') { 
             archiveArtifacts artifacts: "${BUILD_ID}_tfplan.txt"
 			//cleanWs()
 		}
