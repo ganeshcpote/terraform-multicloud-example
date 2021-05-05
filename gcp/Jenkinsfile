@@ -69,7 +69,6 @@ pipeline {
 				instance_name = sh(returnStdout: true, script: 'terraform output -raw instance_name').trim()
 				cpu_platform = sh(returnStdout: true, script: 'terraform output -raw cpu_platform').trim()
 				zone = sh(returnStdout: true, script: 'terraform output -raw zone').trim()
-				network_ip = sh(returnStdout: true, script: "terraform output -json network_ip | jq -r '.[0]'").trim()
 				subnetwork = sh(returnStdout: true, script: 'terraform output -raw subnetwork').trim()
 				device_name = sh(returnStdout: true, script: 'terraform output -raw device_name').trim()
 				vpc_id = sh(returnStdout: true, script: 'terraform output -raw vpc_id').trim()
@@ -98,7 +97,6 @@ pipeline {
 			html_body = html_body + "<tr><td>Instance Name:</td><td>${instance_name}</td></tr>"
 			html_body = html_body + "<tr><td>CPU Platform:</td><td>${cpu_platform}</td></tr>"
 			html_body = html_body + "<tr><td>Zone:</td><td>${zone}</td></tr>"
-			html_body = html_body + "<tr><td>Network IP:</td><td>${network_ip}</td></tr>"
 			html_body = html_body + "<tr><td>Subnetwork:</td><td>${subnetwork}</td></tr>"
 			html_body = html_body + "<tr><td>Device Name:</td><td>${device_name}</td></tr>"		
 			html_body = html_body + "<tr><td>VPC ID:</td><td>${vpc_id}</td></tr>"		
