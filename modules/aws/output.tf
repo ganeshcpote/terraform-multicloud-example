@@ -43,7 +43,7 @@ output "public_ip" {
 }
 
 output "public_dns" {
-  value = "${aws_eip_association.aws-web-eip-association.public_dns}"
+  value = "${aws_instance.aws-web-server.public_dns}"
 }
 
 output "private_ip" {
