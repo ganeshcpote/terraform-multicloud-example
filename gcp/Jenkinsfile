@@ -63,7 +63,7 @@ pipeline {
 			sh "terraform output"
 
 			script{
-				gcp-web-ip = sh(returnStdout: true, script: 'terraform output -raw gcp-web-ip').trim()
+				gcp_web_ip = sh(returnStdout: true, script: 'terraform output -raw gcp-web-ip').trim()
 				instance_id = sh(returnStdout: true, script: 'terraform output -raw instance_id').trim()
 				machine_type = sh(returnStdout: true, script: 'terraform output -raw machine_type').trim()
 				instance_name = sh(returnStdout: true, script: 'terraform output -raw instance_name').trim()
@@ -78,7 +78,7 @@ pipeline {
 				subnet_id = sh(returnStdout: true, script: 'terraform output -raw subnet_id').trim()
 				subnet_name = sh(returnStdout: true, script: 'terraform output -raw subnet_name').trim()
 				project_name = sh(returnStdout: true, script: 'terraform output -raw project_name').trim()
-				external-ip = sh(returnStdout: true, script: 'terraform output -raw external-ip').trim()
+				external_ip = sh(returnStdout: true, script: 'terraform output -raw external-ip').trim()
 				application_url = sh(returnStdout: true, script: 'terraform output -raw application_url').trim()
 			}
 		}
@@ -92,7 +92,7 @@ pipeline {
 			html_body = html_body + "Below are the provisioning details for your reference : <br/><br/>"
 			html_body = html_body + "<table>"
 			html_body = html_body + "<tr><td>Deployment ID:</td><td>${BUILD_ID}</td></tr>"
-			html_body = html_body + "<tr><td>GCP Web IP:</td><td>${gcp-web-ip}</td></tr>"
+			html_body = html_body + "<tr><td>GCP Web IP:</td><td>${gcp_web_ip}</td></tr>"
 			html_body = html_body + "<tr><td>Application Url:</td><td>${application_url}</td></tr>"
 			html_body = html_body + "<tr><td>Instance ID:</td><td>${instance_id}</td></tr>"
 			html_body = html_body + "<tr><td>Machine Type :</td><td>${machine_type}</td></tr>"
@@ -108,7 +108,7 @@ pipeline {
 			html_body = html_body + "<tr><td>Subnet Id:</td><td>${subnet_id}</td></tr>"		
 			html_body = html_body + "<tr><td>Subnet Name:</td><td>${subnet_name}</td></tr>"		
 			html_body = html_body + "<tr><td>Project Name:</td><td>${project_name}</td></tr>"	
-			html_body = html_body + "<tr><td>External IP Address:</td><td>${external-ip}</td></tr>"
+			html_body = html_body + "<tr><td>External IP Address:</td><td>${external_ip}</td></tr>"
 			html_body = html_body + "</table>"
 			html_body = html_body + "<br/><br/>Thanks, </br>Cloud Deployment Team"
 		}
