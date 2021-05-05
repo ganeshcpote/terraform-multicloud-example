@@ -104,7 +104,7 @@ pipeline {
 			html_body = html_body + "</table>"
 			html_body = html_body + "<br/><br/>Thanks, </br>Cloud Deployment Team"
 		}
-			mail	to: '${user_email}', 
+			mail	to: "${user_email}", 
 			from: 'jenkins@example.com',
 			mimeType: 'text/html',
 			subject: "Your deployment request number \"${BUILD_ID}\" Status - Completed", 
