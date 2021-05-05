@@ -65,3 +65,7 @@ output "external-ip" {
 output "self_link" {
   value = module.gcp_deployment.self_link
 } 
+  
+output "application_url" {
+  value = "http://${module.aws_deployment.external-ip}"
+}
