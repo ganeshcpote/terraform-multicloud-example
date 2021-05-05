@@ -61,6 +61,24 @@ pipeline {
 	}
       }
     }
+  stage('Send Email') {
+      steps {
+	script{
+	    html_body = "Dear User, <br/><br/>" 
+	    html_body = html_body + "Your request number <b> ${BUILD_ID} </b> has been approved and completed.<br/><br/>"
+	    html_body = html_body + "Below are the provisioning details for your reference : <br/><br/>"
+	    html_body = html_body + "<table><tr>"
+	    html_body = html_body + "<td>Deployment Ref ID:</td><td>${BUILD_ID}</td>"
+	    html_body = html_body + "</table></tr>"
+	    html_body = html_body + "<br/><br/>Thanks, </br>Deployment Team"
+	}
+	mail 	to: 'ganesh.pote@ril.com', 
+		from: 'jenkins@example.com',
+	    	mimeType: 'text/html',
+	    	subject: "Example Build: ${env.JOB_NAME} - Failed", 
+	    	body: html_body
+      }
+    }
   stage('Terraform Destroy Approval') {
 	   steps {
 		   dir('aws') {  
