@@ -5,10 +5,11 @@ pipeline {
   agent any
 
   parameters {
-        string(name: 'app_name', defaultValue: 'test1', description: 'Provide Application name to be deploy') 
+        	string(name: 'app_name', defaultValue: 'test1', description: 'Provide Application name to be deploy') 
 		choice(name: 'app_environment', choices: ['dev', 'qa', 'pre-prod', 'prod'], description: 'Specify environment' )
 		choice(name: 'aws_region', choices: ['us-east-1', 'us-east-2'], description: 'Specify aws region' )
 		choice(name: 'instance_type', choices: ['t2.micro', 't2.medium'], description: 'Specify instance type' )
+	  	string(name: 'user_email', defaultValue: 'ganesh.pote@hotmail.com', description: 'Provide user email Id for notification') 
     }
   stages {
    stage('Preparations') {
