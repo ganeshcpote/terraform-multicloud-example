@@ -59,5 +59,5 @@ output "vm_image" {
 }
 
 output "application_url" {
-  value = "http://${module.aws_deployment.public_ip_address}"
+  value = "http://${module.azure_deployment.public_ip_address}"
 }

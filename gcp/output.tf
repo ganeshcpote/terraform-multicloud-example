@@ -67,5 +67,5 @@ output "self_link" {
 } 
   
 output "application_url" {
-  value = "http://${module.aws_deployment.external-ip}"
+  value = "http://${module.gcp_deployment.external-ip}"
 }
