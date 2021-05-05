@@ -5,7 +5,7 @@ pipeline {
   agent any
 
   parameters {
-        	string(name: 'app_name', defaultValue: 'test1', description: 'Provide Application name to be deploy') 
+        string(name: 'app_name', defaultValue: 'test1', description: 'Provide Application name to be deploy') 
 		choice(name: 'app_environment', choices: ['dev', 'qa', 'pre-prod', 'prod'], description: 'Specify environment' )
 		choice(name: 'aws_region', choices: ['us-east-1', 'us-east-2'], description: 'Specify aws region' )
 		choice(name: 'instance_type', choices: ['t2.micro', 't2.medium'], description: 'Specify instance type' )
@@ -14,25 +14,25 @@ pipeline {
   stages {
    stage('Preparations') {
       steps {
-	script {
-		withCredentials ([usernamePassword(credentialsId: 'aws_credentails', usernameVariable: 'aws_access_key', passwordVariable: 'aws_secret_key')]) {
-		   access_key = aws_access_key
-		   secret_key = aws_secret_key
-		}
-	}
-	dir('aws') {
 		script {
-			data = "aws_access_key=\"${access_key}\"\n"
-			data = data + "aws_secret_key=\"${secret_key}\"\n"
-			data = data + "app_name=\"${app_name}\"\n"
-			data = data + "app_environment=\"${app_environment}\"\n"
-			data = data + "aws_region=\"${aws_region}\"\n"
-			data = data + "instance_type=\"${instance_type}\"\n"
+			withCredentials ([usernamePassword(credentialsId: 'aws_credentails', usernameVariable: 'aws_access_key', passwordVariable: 'aws_secret_key')]) {
+			access_key = aws_access_key
+			secret_key = aws_secret_key
+			}]
 		}
-	writeFile file: "${BUILD_ID}_terraform.tfvars", text: data
-	sh "cat ${BUILD_ID}_terraform.tfvars"
-      	  }
-      }
+		dir('aws') {
+			script {
+				data = "aws_access_key=\"${access_key}\"\n"
+				data = data + "aws_secret_key=\"${secret_key}\"\n"
+				data = data + "app_name=\"${app_name}\"\n"
+				data = data + "app_environment=\"${app_environment}\"\n"
+				data = data + "aws_region=\"${aws_region}\"\n"
+				data = data + "instance_type=\"${instance_type}\"\n"
+			}
+		writeFile file: "${BUILD_ID}_terraform.tfvars", text: data
+		sh "cat ${BUILD_ID}_terraform.tfvars"
+			}
+		}
     }
     stage('Terraform Init') {
       steps {
@@ -89,7 +89,7 @@ pipeline {
 			html_body = html_body + "<tr><td>AMI ID:</td><td>${ami}</td></tr>"
 			html_body = html_body + "<tr><td>Application Url:</td><td>${application_url}</td></tr>"
 			html_body = html_body + "<tr><td>Instance arn:</td><td>${arn}</td></tr>"
-			html_body = html_body + "<tr><td>Availability Zone</td><td>${availability_zone}</td></tr>"
+			html_body = html_body + "<tr><td>Availability Zone: </td><td>${availability_zone}</td></tr>"
 			html_body = html_body + "<tr><td>Instance Type:</td><td>${instance_type}</td></tr>"
 			html_body = html_body + "<tr><td>Key Name:</td><td>${key_name}</td></tr>"
 			html_body = html_body + "<tr><td>Private DNS:</td><td>${private_dns}</td></tr>"
@@ -102,11 +102,11 @@ pipeline {
 			html_body = html_body + "</table>"
 			html_body = html_body + "<br/><br/>Thanks, </br>Cloud Deployment Team"
 		}
-	      		mail	to: '${user_email}', 
-				from: 'jenkins@example.com',
-				mimeType: 'text/html',
-				subject: "Your deployment request number \"${BUILD_ID}\" Status - Completed", 
-				body: html_body
+			mail	to: '${user_email}', 
+			from: 'jenkins@example.com',
+			mimeType: 'text/html',
+			subject: "Your deployment request number \"${BUILD_ID}\" Status - Completed", 
+			body: html_body
 		  }
     }
   stage('Terraform Destroy Approval') {
