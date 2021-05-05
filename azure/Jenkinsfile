@@ -74,13 +74,11 @@ pipeline {
 				security_group_id = sh(returnStdout: true, script: 'terraform output -raw security_group_id').trim()
 				security_group_name = sh(returnStdout: true, script: 'terraform output -raw security_group_name').trim()
 				resource_group_name = sh(returnStdout: true, script: 'terraform output -raw resource_group_name').trim()
-				public_ip_fqdn = sh(returnStdout: true, script: 'terraform output -raw public_ip_fqdn').trim()
+				
 				public_ip_address = sh(returnStdout: true, script: 'terraform output -raw public_ip_address').trim()
 				vm_size = sh(returnStdout: true, script: 'terraform output -raw vm_size').trim()
 				vm_location = sh(returnStdout: true, script: 'terraform output -raw vm_location').trim()
 				vm_id = sh(returnStdout: true, script: 'terraform output -raw vm_id').trim()
-				vm_datadisk_name = sh(returnStdout: true, script: 'terraform output -raw vm_datadisk_name').trim()
-				vm_disk_size_gb = sh(returnStdout: true, script: 'terraform output -raw vm_disk_size_gb').trim()
 				vm_image = sh(returnStdout: true, script: 'terraform output -raw vm_image').trim()
 				application_url = sh(returnStdout: true, script: 'terraform output -raw application_url').trim()
 			}
@@ -103,14 +101,11 @@ pipeline {
 			html_body = html_body + "<tr><td>Private IP:</td><td>${private_ip_address}</td></tr>"
 			html_body = html_body + "<tr><td>Security Group ID:</td><td>${security_group_id}</td></tr>"
 			html_body = html_body + "<tr><td>Security Group Name:</td><td>${security_group_name}</td></tr>"
-			html_body = html_body + "<tr><td>Resource Group Name:</td><td>${resource_group_name}</td></tr>"
-			html_body = html_body + "<tr><td>Public DNS:</td><td>${public_ip_fqdn}</td></tr>"
+			html_body = html_body + "<tr><td>Resource Group Name:</td><td>${resource_group_name}</td></tr>"			
 			html_body = html_body + "<tr><td>Public IP:</td><td>${public_ip_address}</td></tr>"
 			html_body = html_body + "<tr><td>VM Size:</td><td>${vm_size}</td></tr>"		
 			html_body = html_body + "<tr><td>VM Location:</td><td>${vm_location}</td></tr>"		
 			html_body = html_body + "<tr><td>VM Instance ID:</td><td>${vm_id}</td></tr>"
-			html_body = html_body + "<tr><td>VM data disk Name:</td><td>${vm_datadisk_name}</td></tr>"		
-			html_body = html_body + "<tr><td>VM Disk Size (GB):</td><td>${vm_disk_size_gb}</td></tr>"		
 			html_body = html_body + "<tr><td>VM Image:</td><td>${vm_image}</td></tr>"		
 			html_body = html_body + "</table>"
 			html_body = html_body + "<br/><br/>Thanks, </br>Cloud Deployment Team"
