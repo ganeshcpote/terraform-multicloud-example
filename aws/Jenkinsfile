@@ -18,7 +18,7 @@ pipeline {
 			withCredentials ([usernamePassword(credentialsId: 'aws_credentails', usernameVariable: 'aws_access_key', passwordVariable: 'aws_secret_key')]) {
 			access_key = aws_access_key
 			secret_key = aws_secret_key
-			}]
+			}
 		}
 		dir('aws') {
 			script {
