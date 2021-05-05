@@ -69,7 +69,7 @@ pipeline {
 				private_dns = sh(returnStdout: true, script: 'terraform output -raw private_dns').trim()
 				private_ip = sh(returnStdout: true, script: 'terraform output -raw private_ip').trim()
 				public_dns = sh(returnStdout: true, script: 'terraform output -raw public_dns').trim()
-				public_id = sh(returnStdout: true, script: 'terraform output -raw public_id').trim()
+				public_ip = sh(returnStdout: true, script: 'terraform output -raw public_ip').trim()
 				route_table_id = sh(returnStdout: true, script: 'terraform output -raw route_table_id').trim()
 				subnet_id = sh(returnStdout: true, script: 'terraform output -raw subnet_id').trim()
 				vpc_id = sh(returnStdout: true, script: 'terraform output -raw vpc_id').trim()
@@ -94,7 +94,7 @@ pipeline {
 			html_body = html_body + "<tr><td>Private DNS:</td><td>${private_dns}</td></tr>"
 			html_body = html_body + "<tr><td>Private IP:</td><td>${private_ip}</td></tr>"
 			html_body = html_body + "<tr><td>Public DNS:</td><td>${public_dns}</td></tr>"
-			html_body = html_body + "<tr><td>Public IP:</td><td>${public_id}</td></tr>"
+			html_body = html_body + "<tr><td>Public IP:</td><td>${public_ip}</td></tr>"
 			html_body = html_body + "<tr><td>Route Table ID:</td><td>${route_table_id}</td></tr>"		
 			html_body = html_body + "<tr><td>Subnet ID:</td><td>${subnet_id}</td></tr>"		
 			html_body = html_body + "<tr><td>VPC ID:</td><td>${vpc_id}</td></tr>"		
