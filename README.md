@@ -29,3 +29,12 @@
 
 ## Email Notification
 ![Jenkins](/images/email.png)
+
+## AWS Apache Website
+![Jenkins](/images/aws-web.png)
+
+## Azure Apache Website
+![Jenkins](/images/azure-web.png)
+
+## GCP Apache Website
+![Jenkins](/images/gcp-web.png)
