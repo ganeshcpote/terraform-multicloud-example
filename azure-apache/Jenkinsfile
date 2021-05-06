@@ -26,7 +26,7 @@ pipeline {
 			client_secret = azure_client_secret
 			}
 		}
-		dir('azure') {
+		dir('azure-apache') {
 			script {
 				data = "azure_subscription_id=\"${subscription_id}\"\n"
 				data = data + "azure_tenant_id=\"${tenant_id}\"\n"
@@ -42,7 +42,7 @@ pipeline {
     }
     stage('Terraform Init') {
       steps {
-	dir('azure') {  
+	dir('azure-apache') {  
 		sh "terraform init -backend-config=\"conn_str=postgres://jenkins:jenkins@localhost/terraformstate?sslmode=disable\" -input=false"
 		//sh "terraform init  -input=false -backend-config=\"bucket=jenkins\" -backend-config=\"access_key=${access_key}\" -backend-config=\"secret_key=${secret_key}\" -backend-config=\"region=${aws_region}\" -backend-config=\"key=tf-state/${BUILD_ID}_terraform.tfstate\""
 		sh "terraform workspace new azure_${BUILD_ID}_state"
@@ -54,7 +54,7 @@ pipeline {
     }
     stage('Terraform Plan') {
       steps {
-		dir('azure') {   
+		dir('azure-apache') {   
 			sh "terraform plan -out=tfplan -var-file=${BUILD_ID}_terraform.tfvars"
 			sh "terraform show -no-color tfplan > ${BUILD_ID}_tfplan.txt"
 		}
@@ -62,7 +62,7 @@ pipeline {
     }
    stage('Terraform Apply') {
       steps {
-		dir('azure') {   
+		dir('azure-apache') {   
 			sh "terraform apply -input=false -auto-approve tfplan"
 			sh "terraform output"
 
@@ -116,7 +116,7 @@ pipeline {
   }
   stage('Terraform Destroy Approval') {
 	   steps {
-		   dir('azure') {  
+		   dir('azure-apache') {  
             script {
                 def plan = readFile "${BUILD_ID}_tfplan.txt"
                 input message: "Do you want to destroy the plan?",
@@ -127,7 +127,7 @@ pipeline {
     }
   stage('Terraform Destroy') {
       steps {
-		dir('azure') {   
+		dir('azure-apache') {   
 			sh "terraform workspace select azure_${BUILD_ID}_state"
 			sh "terraform destroy -input=false -auto-approve -var-file=${BUILD_ID}_terraform.tfvars"
 		}
@@ -136,7 +136,7 @@ pipeline {
   }
   post {
         always {
-			dir('azure') { 
+			dir('azure-apache') { 
 				archiveArtifacts artifacts: "${BUILD_ID}_tfplan.txt"
 				//cleanWs()
 			}

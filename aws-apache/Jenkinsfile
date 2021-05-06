@@ -20,7 +20,7 @@ pipeline {
 			secret_key = aws_secret_key
 			}
 		}
-		dir('aws') {
+		dir('aws-apache') {
 			script {
 				data = "aws_access_key=\"${access_key}\"\n"
 				data = data + "aws_secret_key=\"${secret_key}\"\n"
@@ -36,7 +36,7 @@ pipeline {
     }
     stage('Terraform Init') {
       steps {
-		dir('aws') {  
+		dir('aws-apache') {  
 			sh "terraform init -backend-config=\"conn_str=postgres://jenkins:jenkins@localhost/terraformstate?sslmode=disable\" -input=false"
 			//sh "terraform init  -input=false -backend-config=\"bucket=jenkins\" -backend-config=\"access_key=${access_key}\" -backend-config=\"secret_key=${secret_key}\" -backend-config=\"region=${aws_region}\" -backend-config=\"key=tf-state/${BUILD_ID}_terraform.tfstate\""
 			sh "terraform workspace new aws_${BUILD_ID}_state"
@@ -48,7 +48,7 @@ pipeline {
     }	
     stage('Terraform Plan') {
       steps {
-		dir('aws') {   
+		dir('aws-apache') {   
 				sh "terraform plan -out=tfplan -var-file=${BUILD_ID}_terraform.tfvars"
 				sh "terraform show -no-color tfplan > ${BUILD_ID}_tfplan.txt"
 		}
@@ -56,7 +56,7 @@ pipeline {
     }
    stage('Terraform Apply') {
       steps {
-		dir('aws') {   
+		dir('aws-apache') {   
 			sh "terraform apply -input=false -auto-approve tfplan"
 			sh "terraform output"
 			
@@ -112,7 +112,7 @@ pipeline {
     }
   stage('Terraform Destroy Approval') {
 	   steps {
-		   dir('aws') {  
+		   dir('aws-apache') {  
             script {
                 def plan = readFile "${BUILD_ID}_tfplan.txt"
                 input message: "Do you want to destroy the plan?",
@@ -123,7 +123,7 @@ pipeline {
     }
 stage('Terraform Destroy') {
       steps {
-		dir('aws') {   
+		dir('aws-apache') {   
 			sh "terraform workspace select  aws_${BUILD_ID}_state"
 				sh "terraform destroy -input=false -auto-approve -var-file=${BUILD_ID}_terraform.tfvars"
 		}
@@ -132,7 +132,7 @@ stage('Terraform Destroy') {
   }
   post {
         always {
-			dir('aws') { 
+			dir('aws-apache') { 
 				archiveArtifacts artifacts: "${BUILD_ID}_tfplan.txt"
 				//cleanWs()
 			}
