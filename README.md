@@ -14,6 +14,15 @@
 3. GCP credentials : </br>
    Create "cred.json" GCP credentials file any folder and update "gcp_auth_file" value in gcp/Jenkinsfile
 4. Configure SMTP configuration
-   
+
+## AWS Deployment Job
+![Jenkins](/images/aws.png)
+
+## Azure Deployment Job
+![Jenkins](/images/azure.png)
+
+## GCP Deployment Job
+![Jenkins](/images/gcp.png)
+
 ## Pipeline View
 ![Jenkins](/images/jenkins.PNG)
