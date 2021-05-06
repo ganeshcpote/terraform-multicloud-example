@@ -1,6 +1,6 @@
 # Terraform Multicloud Example
 
-## Postgres Configuration
+## PostgreSQL Configuration
 1. Install Postgres server on Jenkins server
 2. Create "jenkins" with "jenkins" password
 3. Create "terraformstate" and provide "jenkins" user with full access
