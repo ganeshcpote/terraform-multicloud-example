@@ -6,12 +6,12 @@
 3. Create "terraformstate" and provide "jenkins" user with full access
 
 ## Jenkins Configuration
-1. AWS credentials : </br>
+1. AWS Credentials : </br>
    - Create "aws_credentails" under Jenkins credentials as "Username with password" and add access key as username and secrete key as password
-2. Azure credentials : </br>
+2. Azure Credentials : </br>
    - Create "azure-sub-tenant-id" under Jenkins credentials as "Username with password" and add subscription id as username and azure tenant id as password
    - Create "azure-clientid-secret" under Jenkins credentials as "Username with password" and add client id as username and azure client secrete as password
-3. GCP credentials : </br>
+3. GCP Credentials : </br>
    - Create "cred.json" GCP credentials file any folder and update "gcp_auth_file" value in gcp/Jenkinsfile
 4. Configure SMTP configuration
 
