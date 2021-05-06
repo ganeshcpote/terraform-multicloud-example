@@ -26,3 +26,6 @@
 
 ## Pipeline View
 ![Jenkins](/images/jenkins.PNG)
+
+## Email Notification
+![Jenkins](/images/email.png)
