@@ -31,7 +31,7 @@
 ![Jenkins](/images/email.png)
 
 ## AWS Apache Website
-![Jenkins](/images/aws-web.png)
+![Jenkins](/images/aws-web.png) 
 
 ## Azure Apache Website
 ![Jenkins](/images/azure-web.png)
