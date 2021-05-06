@@ -1,4 +1,4 @@
-# Terraform Multicloud Deployment using Jenkins Pipeline
+# Terraform Multicloud (AWS, Azure & GCP) Deployment using Jenkins Pipeline with email notification
 
 ## PostgreSQL Configuration
 1. Install Postgres server on Jenkins server
