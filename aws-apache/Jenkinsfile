@@ -62,7 +62,7 @@ pipeline {
 			sh "echo ***********************************"
 			sh "echo state information"
 			sh "echo ***********************************"
-			sh "terraform state show"
+			sh "terraform show -json"
 			sh "echo ***********************************"
 			
 			script{
