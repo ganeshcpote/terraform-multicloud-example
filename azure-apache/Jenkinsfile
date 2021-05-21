@@ -65,6 +65,11 @@ pipeline {
 		dir('azure-apache') {   
 			sh "terraform apply -input=false -auto-approve tfplan"
 			sh "terraform output"
+			sh "echo ***********************************"
+			sh "echo state information"
+			sh "echo ***********************************"
+			sh "terraform show -json"
+			sh "echo ***********************************"
 
 			script{
 				vnet_id = sh(returnStdout: true, script: 'terraform output -raw vnet_id').trim()
