@@ -59,6 +59,11 @@ pipeline {
 		dir('aws-apache') {   
 			sh "terraform apply -input=false -auto-approve tfplan"
 			sh "terraform output"
+			sh "echo ***********************************"
+			sh "echo state information"
+			sh "echo ***********************************"
+			sh "terraform state show"
+			sh "echo ***********************************"
 			
 			script{
 				ami = sh(returnStdout: true, script: 'terraform output -raw ami').trim()
