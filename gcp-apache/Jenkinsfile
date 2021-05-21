@@ -61,7 +61,12 @@ pipeline {
 		dir('gcp-apache') {   
 			sh "terraform apply -input=false -auto-approve tfplan"
 			sh "terraform output"
-
+			sh "echo ***********************************"
+			sh "echo state information"
+			sh "echo ***********************************"
+			sh "terraform show -json"
+			sh "echo ***********************************"
+			
 			script{
 				gcp_web_ip = sh(returnStdout: true, script: 'terraform output -raw gcp-web-ip').trim()
 				instance_id = sh(returnStdout: true, script: 'terraform output -raw instance_id').trim()
